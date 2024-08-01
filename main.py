@@ -6,6 +6,7 @@ import uvicorn
 import json
 import os
 from dotenv import load_dotenv
+from pydantic import BaseModel
 
 import asyncio
 from langflow.load import load_flow_from_json
@@ -59,8 +60,12 @@ async def hello(request: Request, name: str = Form(...)):
         )
 
 
+class Query(BaseModel):
+    q: str
+
+
 @app.post("/hindi")
-async def hindi(request: Request):
+async def hindi(query: Query):
     with open("hello_world.json", "r") as file:
         json_data = json.load(file)
 
@@ -82,9 +87,11 @@ async def hindi(request: Request):
         tweaks=TWEAKS,
     )
 
+    print(f"sending query: [{query.q}]")
+    
     # Run the graph
     result = await graph.arun(
-        inputs=[{"input_value": "message"}],
+        inputs=[{"input_value": query.q}],
         inputs_components=[],
         types=["chat"],
         outputs=[],
