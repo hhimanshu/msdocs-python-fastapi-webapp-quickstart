@@ -72,7 +72,7 @@ async def hindi(request: Request):
         "Prompt-VKbE3": {},
         "ChatOutput-KMUev": {},
         "OpenAIModel-9Y4gs": {
-            "api_key": "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"
+            "api_key": os.getenv("OPENAI_API_KEY"),
         },
     }
 
